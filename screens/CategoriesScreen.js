@@ -1,8 +1,5 @@
 import React from "react";
 import {
-	View,
-	Text,
-	TouchableOpacity,
 	FlatList,
 	StyleSheet
 } from "react-native";
@@ -11,11 +8,11 @@ import CategoryGridTile from "../components/CategoryGridTile";
 
 const CategoriesScreen = props => {
 	const renderGridItem = itemData => {
-		return <CategoryGridTile title={itemData.item.title} onSelect = {() => {
+		return <CategoryGridTile title={itemData.item.title} color={itemData.item.color} onSelect = {() => {
 			props.navigation.navigate({
 				routeName: "CategoryMeals",
 				params: {
-					categoryId: itemData.item.id
+					categoryId: itemData.item.id					
 				}
 			});
 		}}/> ;

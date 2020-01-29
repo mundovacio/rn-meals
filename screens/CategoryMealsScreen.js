@@ -1,21 +1,43 @@
 import React from "react";
 import {Platform} from 'react-native';
-import { View, Text, Button, StyleSheet } from "react-native";
-import { CATEGORIES } from "../data/dummy-data";
+import { View, StyleSheet, FlatList } from "react-native";
+import { CATEGORIES, MEALS } from "../data/dummy-data";
+import MealGridTile from "../components/MealGridTile";
 
 const CategoryMealsScreen = props => {
-	// const catId = props.navigation.getParam("categoryId");
-	// const selectedCategory = CATEGORIES.find(cat => cat.id == catId);
+	const catId = props.navigation.getParam("categoryId");
+
+	const displayedMeals = MEALS.filter( 
+		meal => meal.categoryIds.indexOf(catId) > -1 
+	);
+
+	const renderMealItem = itemData => {
+		return (
+			<MealGridTile 
+				title = {itemData.item.title}
+				affordability = {itemData.item.affordability}
+				complexity = {itemData.item.complexity}
+				imageUrl = {itemData.item.imageUrl}
+				duration = {itemData.item.duration}
+				isGlutenFree = {itemData.item.isGlutenFree}
+				isVegan = {itemData.item.isVegan}
+				isVegetarian = {itemData.item.isVegetarian}
+				isLactoseFree = {itemData.item.isLactoseFree}
+				onSelect = {() => {
+					props.navigation.navigate({
+						routeName: "MealDetail",
+						params: {
+							categoryId: itemData.item.id					
+						}
+					});
+				}}
+			/>
+		)
+	};
 
 	return (
 		<View style={styles.screen}>
-			<Text>the Category Meal Screen!</Text>
-			<Button
-				title="Go to Meal Details"
-				onPress={() => {
-					props.navigation.navigate({ routeName: "MealDetail" });
-				}}
-			/>
+			<FlatList data={displayedMeals} renderItem={renderMealItem}/>
 		</View>
 	);
 };
