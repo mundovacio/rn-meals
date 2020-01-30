@@ -2,7 +2,7 @@ import React from "react";
 import {Platform} from 'react-native';
 import { View, StyleSheet, FlatList } from "react-native";
 import { CATEGORIES, MEALS } from "../data/dummy-data";
-import MealGridTile from "../components/MealGridTile";
+import MealItem from "../components/MealItem";
 
 const CategoryMealsScreen = props => {
 	const catId = props.navigation.getParam("categoryId");
@@ -13,21 +13,17 @@ const CategoryMealsScreen = props => {
 
 	const renderMealItem = itemData => {
 		return (
-			<MealGridTile 
+			<MealItem 
 				title = {itemData.item.title}
 				affordability = {itemData.item.affordability}
 				complexity = {itemData.item.complexity}
 				imageUrl = {itemData.item.imageUrl}
 				duration = {itemData.item.duration}
-				isGlutenFree = {itemData.item.isGlutenFree}
-				isVegan = {itemData.item.isVegan}
-				isVegetarian = {itemData.item.isVegetarian}
-				isLactoseFree = {itemData.item.isLactoseFree}
-				onSelect = {() => {
+				onSelectMeal = {() => {
 					props.navigation.navigate({
 						routeName: "MealDetail",
 						params: {
-							categoryId: itemData.item.id					
+							mealId: itemData.item.id					
 						}
 					});
 				}}
@@ -37,7 +33,7 @@ const CategoryMealsScreen = props => {
 
 	return (
 		<View style={styles.screen}>
-			<FlatList data={displayedMeals} renderItem={renderMealItem}/>
+			<FlatList data={displayedMeals} renderItem={renderMealItem} style={{width:'100%'}}/>
 		</View>
 	);
 };
@@ -60,7 +56,8 @@ const styles = StyleSheet.create({
 	screen: {
 		flex: 1,
 		justifyContent: "center",
-		alignItems: "center"
+		alignItems: "center",
+		padding: 15
 	}
 });
 
