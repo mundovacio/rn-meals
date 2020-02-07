@@ -1,41 +1,50 @@
 import React from "react";
-import { StyleSheet, View, Button, Text } from "react-native";
-import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import {
+	ScrollView,
+	StyleSheet,
+	View,
+	Button,
+	Image,
+	Text
+} from "react-native";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { MEALS } from "../data/dummy-data";
-import MealDetails from "../components/MealDetails";
-import HeaderButton from '../components/HeaderButton';
+import HeaderButton from "../components/HeaderButton";
+import DefaultText from "../components/DefaultText";
+
+const ListItem = props => {
+	return (
+		<View style={styles.listItem}>
+			<DefaultText>{props.children}</DefaultText>
+		</View>
+	);
+};
 
 const MealDetailScreen = props => {
 	const mealId = props.navigation.getParam("mealId");
 	const selectedMeal = MEALS.find(meal => meal.id === mealId);
 
 	return (
-		<View style={styles.screen}>
-			<MealDetails
-				title={selectedMeal.title}
-				categoryIds={selectedMeal.categoryIds}
-				affordability={selectedMeal.affordability}
-				complexity={selectedMeal.complexity}
-				imageUrl={selectedMeal.imageUrl}
-				duration={selectedMeal.duration}
-				ingredientes={selectedMeal.ingredientes}
-				steps={selectedMeal.steps}
-				isGlutenFree={selectedMeal.isGlutenFree}
-				isVegan={selectedMeal.isVegan}
-				isVegetarian={selectedMeal.isVegetarian}
-				isLactoseFree={selectedMeal.isLactoseFree}
-			/>
-			<Button title="Go back to Categories" onPress={() => {
-				props.navigation.navigate({
-					routeName: "Categories"
-				});
-			}} />
-		</View>
+		<ScrollView>
+			<Image source={{ uri: selectedMeal.imageUrl }} style={styles.image} />
+			<View style={styles.details}>
+				<DefaultText>{selectedMeal.duration}m</DefaultText>
+				<DefaultText>{selectedMeal.complexity.toUpperCase()}</DefaultText>
+				<DefaultText>{selectedMeal.affordability.toUpperCase()}</DefaultText>
+			</View>
+			<Text style={styles.title}>Ingredients</Text>
+			{selectedMeal.ingredientes.map(ingredient => (
+				<ListItem key={ingredient}>{ingredient}</ListItem>
+			))}
+			<Text style={styles.title}>Steps</Text>
+			{selectedMeal.steps.map(step => (
+				<ListItem key={step}>{step}</ListItem>
+			))}
+		</ScrollView>
 	);
 };
 
-MealDetailScreen.navigationOptions = (navigationData) => {
-
+MealDetailScreen.navigationOptions = navigationData => {
 	const mealId = navigationData.navigation.getParam("mealId");
 	const selectedMeal = MEALS.find(meal => meal.id === mealId);
 
@@ -43,15 +52,15 @@ MealDetailScreen.navigationOptions = (navigationData) => {
 		headerTitle: selectedMeal.title,
 		headerRight: () => {
 			return (
-			<HeaderButtons HeaderButtonComponent={HeaderButton}>
-				<Item
-					title='Favorite'
-					iconName={'ios-star'}
-					onPress={() => {
-						console.log('Mark as favorite')
-					}}
-				/>
-			</HeaderButtons>
+				<HeaderButtons HeaderButtonComponent={HeaderButton}>
+					<Item
+						title="Favorite"
+						iconName={"ios-star"}
+						onPress={() => {
+							console.log("Mark as favorite");
+						}}
+					/>
+				</HeaderButtons>
 			);
 		}
 	};
@@ -59,7 +68,28 @@ MealDetailScreen.navigationOptions = (navigationData) => {
 
 const styles = StyleSheet.create({
 	screen: {
-		flex: 1,
+		flex: 1
+	},
+	image: {
+		width: "100%",
+		height: 200
+	},
+	details: {
+		flexDirection: "row",
+		padding: 15,
+		justifyContent: "space-around"
+	},
+	title: {
+		fontFamily: "open-sans-bold",
+		fontSize: 22,
+		textAlign: "center"
+	},
+	listItem : {
+		marginHorizontal: 20,
+		marginVertical: 10,
+		borderColor: '#ccc',
+		borderWidth: 1,
+		padding: 10
 	}
 });
 
